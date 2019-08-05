@@ -19,12 +19,14 @@ trait AlipayCore
 	 */
 	public function createLinkstring($para)
 	{
-		$arg  = "";
-		while (list($key, $val) = each($para)) {
-			$arg .= $key . "=" . $val . "&";
+		$arg = "";
+		foreach ($para as $k => $v) {
+			if ($k != "sign" && $v != "" && !is_array($v)) {
+				$arg .= $k . "=" . $v . "&";
+			}
 		}
-		//去掉最后一个&字符
-		$arg = substr($arg, 0, count($arg) - 2);
+
+		$arg = trim($arg, "&");
 
 		//如果存在转义字符，那么去掉转义
 		if (get_magic_quotes_gpc()) {
@@ -40,12 +42,14 @@ trait AlipayCore
 	 */
 	public function createLinkstringUrlencode($para)
 	{
-		$arg  = "";
-		while (list($key, $val) = each($para)) {
-			$arg .= $key . "=" . urlencode($val) . "&";
+		$arg = "";
+		foreach ($para as $k => $v) {
+			if ($k != "sign" && $v != "" && !is_array($v)) {
+				$arg .= $k . "=" . $v . "&";
+			}
 		}
-		//去掉最后一个&字符
-		$arg = substr($arg, 0, count($arg) - 2);
+
+		$arg = trim($arg, "&");
 
 		//如果存在转义字符，那么去掉转义
 		if (get_magic_quotes_gpc()) {
@@ -62,9 +66,9 @@ trait AlipayCore
 	public function paraFilter($para)
 	{
 		$para_filter = array();
-		while (list($key, $val) = each($para)) {
-			if ($key == "sign" || $key == "sign_type" || $val == "") continue;
-			else	$para_filter[$key] = $para[$key];
+		foreach ($para as $k => $v) {
+			if ($k == "sign" || $k == "sign_type" || $v == "") continue;
+			else	$para_filter[$k] = $para[$k];
 		}
 		return $para_filter;
 	}
